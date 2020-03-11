@@ -4849,8 +4849,10 @@ load_program(struct bpf_program *prog, struct bpf_insn *insns, int insns_cnt,
 	char *log_buf;
 	int btf_fd, ret;
 
-	if (!insns || !insns_cnt)
+	if (!insns || !insns_cnt) {
+		pr_warn("!insns || !insns_cnt\n");
 		return -EINVAL;
+	}
 
 	memset(&load_attr, 0, sizeof(struct bpf_load_program_attr));
 	load_attr.prog_type = prog->type;
@@ -4973,6 +4975,7 @@ int bpf_program__load(struct bpf_program *prog, char *license, __u32 kern_ver)
 			pr_warn("Program '%s' is inconsistent: nr(%d) != 1\n",
 				prog->section_name, prog->instances.nr);
 		}
+		pr_warn("load_program\n");
 		err = load_program(prog, prog->insns, prog->insns_cnt,
 				   license, kern_ver, &fd);
 		if (!err)
