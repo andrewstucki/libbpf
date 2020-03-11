@@ -4752,6 +4752,7 @@ bpf_object__relocate(struct bpf_object *obj, const char *targ_btf_path)
 	size_t i;
 	int err;
 
+	pr_warn("performing CO-RE relocations for: %s\n", obj->name);
 	if (obj->btf_ext) {
 		err = bpf_object__relocate_core(obj, targ_btf_path);
 		if (err) {
