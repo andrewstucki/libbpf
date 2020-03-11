@@ -4873,10 +4873,14 @@ load_program(struct bpf_program *prog, struct bpf_insn *insns, int insns_cnt,
 		load_attr.prog_ifindex = prog->prog_ifindex;
 	}
 	/* if .BTF.ext was loaded, kernel supports associated BTF for prog */
-	if (prog->obj->btf_ext)
+	if (prog->obj->btf_ext) {
+		pr_warn("btf_fd = bpf_object__btf_fd(prog->obj);\n")
 		btf_fd = bpf_object__btf_fd(prog->obj);
-	else
+	}
+	else {
+		pr_warn("btf_fd = -1\n")
 		btf_fd = -1;
+	}
 	load_attr.prog_btf_fd = btf_fd >= 0 ? btf_fd : 0;
 	load_attr.func_info = prog->func_info;
 	load_attr.func_info_rec_size = prog->func_info_rec_size;
