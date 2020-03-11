@@ -6657,6 +6657,7 @@ static int libbpf_find_attach_btf_id(struct bpf_program *prog)
 	const char *name = prog->section_name;
 	int i, err;
 
+		pr_warn("attach BTF id\n");
 	if (!name) {
 		pr_warn("attach BTF id EINVAL\n");
 		return -EINVAL;
