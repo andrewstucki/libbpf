@@ -5319,14 +5319,23 @@ int bpf_object__load_xattr(struct bpf_object_load_attr *attr)
 
 	obj->loaded = true;
 
+	pr_warn("bpf_object__probe_caps\n");
 	err = bpf_object__probe_caps(obj);
+	pr_warn("bpf_object__resolve_externs\n");
 	err = err ? : bpf_object__resolve_externs(obj, obj->kconfig);
+	pr_warn("bpf_object__sanitize_and_load_btf\n");
 	err = err ? : bpf_object__sanitize_and_load_btf(obj);
+	pr_warn("bpf_object__sanitize_maps\n");
 	err = err ? : bpf_object__sanitize_maps(obj);
+	pr_warn("bpf_object__load_vmlinux_btf\n");
 	err = err ? : bpf_object__load_vmlinux_btf(obj);
+	pr_warn("bpf_object__init_kern_struct_ops_maps\n");
 	err = err ? : bpf_object__init_kern_struct_ops_maps(obj);
+	pr_warn("bpf_object__create_maps\n");
 	err = err ? : bpf_object__create_maps(obj);
+	pr_warn("bpf_object__relocate\n");
 	err = err ? : bpf_object__relocate(obj, attr->target_btf_path);
+	pr_warn("bpf_object__load_progs\n");
 	err = err ? : bpf_object__load_progs(obj, attr->log_level);
 
 	btf__free(obj->btf_vmlinux);
