@@ -4899,6 +4899,8 @@ retry_load:
 			pr_debug("verifier log:\n%s", log_buf);
 		*pfd = ret;
 		ret = 0;
+		pr_warn("verifier log\n");
+		pr_debug("verifier log:\n%s", log_buf);
 		goto out;
 	}
 
@@ -4913,6 +4915,7 @@ retry_load:
 	pr_perm_msg(ret);
 
 	if (log_buf && log_buf[0] != '\0') {
+		pr_warn("LIBBPF_ERRNO__VERIFY\n");
 		ret = -LIBBPF_ERRNO__VERIFY;
 		pr_warn("-- BEGIN DUMP LOG ---\n");
 		pr_warn("\n%s\n", log_buf);
@@ -4920,6 +4923,7 @@ retry_load:
 	} else if (load_attr.insns_cnt >= BPF_MAXINSNS) {
 		pr_warn("Program too large (%zu insns), at most %d insns\n",
 			load_attr.insns_cnt, BPF_MAXINSNS);
+		pr_warn("LIBBPF_ERRNO__PROG2BIG\n");
 		ret = -LIBBPF_ERRNO__PROG2BIG;
 	} else if (load_attr.prog_type != BPF_PROG_TYPE_KPROBE) {
 		/* Wrong program type? */
@@ -4927,9 +4931,12 @@ retry_load:
 
 		load_attr.prog_type = BPF_PROG_TYPE_KPROBE;
 		load_attr.expected_attach_type = 0;
+		
+		pr_warn("bpf_load_program_xattr\n");
 		fd = bpf_load_program_xattr(&load_attr, NULL, 0);
 		if (fd >= 0) {
 			close(fd);
+			pr_warn("LIBBPF_ERRNO__PROGTYPE\n");
 			ret = -LIBBPF_ERRNO__PROGTYPE;
 			goto out;
 		}
